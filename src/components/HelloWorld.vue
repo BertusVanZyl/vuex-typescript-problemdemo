@@ -2,30 +2,26 @@
   <div class="hello">
     <button v-on:click="doesNotWork">DOES NOT WORK</button>
     <button v-on:click="works">WORKS</button>
-    
-    {{v}}   
+
+    {{ v }}
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Store } from 'vuex';
-import { testState as test, TestStateInterface } from "../store/TestState" 
-import { namespace } from "vuex-class"
+import * as TestModule from "../store/TestState";
 
 @Component
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
   doesNotWork() {
-    const store = this.$store.state.test;
-    test.mutations.mutateTestVal(store, "new value (not works)");
+    TestModule.updateSearchTerm(this.$store, "new value, (also works)");
   }
-  works() {    
-    this.$store.commit("test/mutateTestVal", "new value (works)");    
+  works() {
+    this.$store.commit("test/mutateTestVal", "new value (works)");
   }
-  get v() : string {
-    const store = this.$store.state.test;
-    return test.getters.testValGetter(store);
+  get v(): string {
+    return TestModule.testValGetter(this.$store);
   }
 }
 </script>
